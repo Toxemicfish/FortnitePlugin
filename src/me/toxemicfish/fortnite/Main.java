@@ -1,5 +1,6 @@
 package me.toxemicfish.fortnite;
 
+import me.toxemicfish.fortnite.commands.ArenaCommands;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -21,6 +22,7 @@ public class Main extends JavaPlugin {
     }
 
     private void registerCommands() {
+        getCommand("arena").setExecutor(new ArenaCommands());
     }
 
     private void registerEvents() {
