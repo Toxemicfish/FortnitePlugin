@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class Arena {
-    private final int id;
-    private final Location spawn;
-    private final List<UUID> players = new ArrayList<UUID>();
+    int id;
+    public Location spawn;
+    List<String> players = new ArrayList<String>();
 
     public Arena(Location spawn, int id) {
         this.spawn = spawn;
@@ -20,11 +20,7 @@ public class Arena {
         return id;
     }
 
-    public Location getSpawn() {
-        return spawn;
-    }
-
-    public List<UUID> getPlayers() {
+    public List<String> getPlayers() {
         return players;
     }
 }

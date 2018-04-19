@@ -1,5 +1,7 @@
 package me.toxemicfish.fortnite.Managers;
 
+import me.toxemicfish.fortnite.Main;
+import me.toxemicfish.fortnite.utils.arenaYML;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,24 +13,29 @@ import java.util.*;
 public class ArenaManager {
 
     // Singleton instance
-    private static ArenaManager am;
+    private static ArenaManager am = new ArenaManager();
 
     // Player data
-    private final Map<UUID, Location> locs = new HashMap<UUID, Location>();
+    private final Map<String, Location> locs = new HashMap<String, Location>();
     private final Map<UUID, ItemStack[]> inv = new HashMap<UUID, ItemStack[]>();
     private final Map<UUID, ItemStack[]> armor = new HashMap<UUID, ItemStack[]>();
 
-    private final List<Arena> arenas = new ArrayList<Arena>();
+    List<Arena> arenas = new ArrayList<Arena>();
+
+    static Main plugin;
+
+    public ArenaManager(Main main) {
+        main = main;
+    }
 
     // Keeps track of the current arena ID
     private int arenaSize = 0;
 
-    private ArenaManager() {
+    public ArenaManager() {
+
     }
 
     public static ArenaManager getManger() {
-        if (am == null)
-            am = new ArenaManager();
         return am;
     }
 
@@ -40,7 +47,7 @@ public class ArenaManager {
      * @return the arena possessibg the specified ID
      */
     public Arena getArena(int i) {
-        for (Arena a : this.arenas) {
+        for (Arena a : arenas) {
             if (a.getId() == i) {
                 return a;
             }
@@ -59,17 +66,15 @@ public class ArenaManager {
      * @param i th arena ID. A check will be done to ensure its validity
      */
     public void addPlayer(Player p, int i) {
-        Arena a = this.getArena(i);
+        Arena a = getArena(i);
         if (a == null) {
             p.sendMessage(ChatColor.RED + "Invalid arena!");
             return;
         }
 
-        if (this.isinGame(p)) {
-            p.sendMessage(ChatColor.RED + "Cannot join more than 1 game");
-            return;
-        }
-        a.getPlayers().add(p.getUniqueId());
+
+        a.getPlayers().add(p.getName());
+        p.teleport(a.spawn);
     }
 
     public void removePlayer(Player p) {
@@ -94,12 +99,48 @@ public class ArenaManager {
     }
 
     public Arena createArena(Location l) {
-        this.arenaSize++;
+        int num = arenaSize + 1;
+        arenaSize++;
 
-        Arena a = new Arena(l, this.arenaSize);
-        this.arenas.add(a);
+        Arena a = new Arena(l, num);
+        arenas.add(a);
+
+        arenaYML.getArenas().set("Arenas." + num, serializeLoc(l));
+        List<Integer> list = arenaYML.getArenas().getIntegerList("Arenas.Arenas");
+        list.add(num);
+        arenaYML.getArenas().set("Arenas.Arenas", list);
+        arenaYML.saveArenas();
+        arenaYML.reloadArenasFile();
 
         return a;
+    }
+
+    public Arena reloadArena(Location l) {
+        int num = arenaSize + 1;
+        arenaSize++;
+
+        Arena a = new Arena(l, num);
+        arenas.add(a);
+
+        return a;
+    }
+
+    public void removeArena(int i) {
+        Arena a = getArena(i);
+        if (a == null) {
+            return;
+        }
+
+        arenas.remove(a);
+
+        arenaYML.getArenas().set("Arenas." + i, null);
+        List<Integer> list = arenaYML.getArenas().getIntegerList("Arenas.Arenas");
+        list.add(i);
+        arenaYML.getArenas().set("Arenas.Arenas", list);
+        arenaYML.saveArenas();
+        arenaYML.reloadArenasFile();
+
+
     }
 
     public boolean isinGame(Player p) {
@@ -110,12 +151,13 @@ public class ArenaManager {
         return false;
     }
 
+
     public String serializeLoc(Location l) {
         return l.getWorld().getName() + "," + l.getBlockX() + "," + l.getBlockY() + "," + l.getBlockZ();
     }
 
     public Location deserialzeLoc(String s) {
         String[] st = s.split(",");
-        return new Location(Bukkit.getWorld(st[0]), Integer.parseInt(st[1]),  Integer.parseInt(st[2]),  Integer.parseInt(st[3]));
+        return new Location(Bukkit.getWorld(st[0]), Integer.parseInt(st[1]), Integer.parseInt(st[2]), Integer.parseInt(st[3]));
     }
 }

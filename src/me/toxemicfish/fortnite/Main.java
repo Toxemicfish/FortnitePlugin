@@ -1,16 +1,23 @@
 package me.toxemicfish.fortnite;
 
+import me.toxemicfish.fortnite.Managers.ArenaManager;
 import me.toxemicfish.fortnite.commands.ArenaCommands;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-    private static Main instance;
 
     @Override
     public void onEnable() {
 
-        instance = this;
+        if(!getDataFolder().exists())
+            getDataFolder().mkdir();
+
+        if(getDataFolder() == null)
+            saveDefaultConfig();
+
+        new ArenaManager(this);
+        //ArenaManager.getManger().loadGames();
 
         registerCommands();
         registerEvents();
@@ -18,7 +25,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        saveConfig();
     }
 
     private void registerCommands() {
@@ -27,9 +34,4 @@ public class Main extends JavaPlugin {
 
     private void registerEvents() {
     }
-
-    public static Main getInstance() {
-        return instance;
-    }
-
 }

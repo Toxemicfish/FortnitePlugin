@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Fortnite:jar">
+    <output-path>$PROJECT_DIR$/../../../1.8.8Server/plugins</output-path>
+    <root id="archive" name="Fortnite.jar">
+      <element id="module-output" name="Fortnite" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../Minecraft/Plugins/Server Builds/spigot-1.8.8.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
