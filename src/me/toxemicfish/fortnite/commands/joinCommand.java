@@ -26,7 +26,7 @@ public class joinCommand implements CommandExecutor {
             gameArena gameArena = plugin.getGame();
             if (p.hasPermission(permission.getPermission(permission.GAME))) {
                 if (gameArena.isGameRunning()) {
-                    chatUtils.messageFromlangYML("gameStarted");
+                    p.sendMessage(chatUtils.color(chatUtils.messageFromlangYML("gameStarted")));
                     return true;
                 }
 
@@ -34,15 +34,12 @@ public class joinCommand implements CommandExecutor {
                     gameArena.getLobby().add(p);
                     gameArena.sendMessageLobby("&e" + p.getName() + " &3has joined the game. SLOT &7(&e" + gameArena.getLobby().size() + "&7/&e" + gameArena.getMINIMUM_PLAYERS() + "&7)");
 
-                    Configuration config = gameYML.getgame();
-
-
-                    World world = Bukkit.getServer().getWorld(config.getString("Settings.Lobby.world"));
-                    double x = config.getDouble("Settings.Lobby.x");
-                    double y = config.getDouble("Settings.Lobby.y");
-                    double z = config.getDouble("Settings.Lobby.z");
-                    float yaw = config.getInt("Settings.Lobby.yaw");
-                    float pitch = config.getInt("Settings.Lobby.pitch");
+                    World world = Bukkit.getServer().getWorld(gameYML.getgame().getString("Settings.lobby.world"));
+                    double x = gameYML.getgame().getDouble("Settings.lobby.x");
+                    double y = gameYML.getgame().getDouble("Settings.lobby.y");
+                    double z = gameYML.getgame().getDouble("Settings.lobby.z");
+                    float yaw = gameYML.getgame().getInt("Settings.lobby.yaw");
+                    float pitch = gameYML.getgame().getInt("Settings.lobby.pitch");
 
                     Location loc = new Location(world, x, y, z, yaw, pitch);
 
@@ -54,7 +51,7 @@ public class joinCommand implements CommandExecutor {
 
                     return true;
                 } else {
-                    p.sendMessage(chatUtils.messageFromlangYML("lobbyAlready"));
+                    p.sendMessage(chatUtils.color(chatUtils.messageFromlangYML("lobbyAlready")));
                 }
                 return true;
             } else {

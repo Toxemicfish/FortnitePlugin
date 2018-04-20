@@ -21,12 +21,12 @@ public class reloadConfig implements CommandExecutor {
 
                 if (args[0].equalsIgnoreCase("lang")) {
                     langYML.reloadlangFile();
-                    p.sendMessage(chatUtils.messageFromlangYML("reloadConfig"));
+                    p.sendMessage(chatUtils.color(chatUtils.messageFromlangYML("reloadConfig")));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("game")) {
                     gameYML.reloadgameFile();
-                    p.sendMessage(chatUtils.messageFromlangYML("reloadConfig"));
+                    p.sendMessage(chatUtils.color(chatUtils.messageFromlangYML("reloadConfig")));
                     return true;
                 } else {
 

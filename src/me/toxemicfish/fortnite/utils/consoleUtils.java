@@ -8,7 +8,7 @@ public class consoleUtils {
     static String prefix = chatUtils.getPrefix();
 
     public static void consoleGood(String msg) {
-        Bukkit.getServer().getConsoleSender().sendMessage(prefix + ChatColor.GREEN + ChatColor.BOLD + msg);
+        Bukkit.getServer().getConsoleSender().sendMessage(prefix + ChatColor.BOLD +  ChatColor.GREEN + msg);
     }
 
     public static void consoleWarn(String msg) {

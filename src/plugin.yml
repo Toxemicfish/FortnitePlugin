@@ -4,3 +4,4 @@ main: me.toxemicfish.fortnite.Main
 commands:
    reloadconfig:
    join:
+   setup:

@@ -4,6 +4,8 @@ import me.toxemicfish.fortnite.Main;
 import me.toxemicfish.fortnite.core.States.gameState;
 import me.toxemicfish.fortnite.utils.chatUtils;
 import me.toxemicfish.fortnite.utils.gameYML;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import org.bukkit.*;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Animals;
@@ -19,6 +21,7 @@ public class gameArena {
     private Main plugin;
 
     public gameArena(Main plugin) {
+        this.plugin = plugin;
         state = gameState.WAITING;
     }
 
@@ -58,6 +61,15 @@ public class gameArena {
 
     public void addAlive(Player player) {
         alive.add(player);
+    }
+
+    public void addAliveAllLobby()
+    {
+        for(Player players : Bukkit.getOnlinePlayers()) {
+            if(isLobby(players)) {
+                alive.add(players);
+            }
+        }
     }
 
     public void removeAlive(Player player) {
@@ -154,7 +166,8 @@ public class gameArena {
         state = gameState.RUNNING;
 
         setupPlayers();
-        removeAllLobby();
+        addAliveAllLobby();
+        lobby.clear();
         sendPlayers();
 
         sendMessageAlive("&aThe game has started fight to end. See who is the last to survive!!");
@@ -171,7 +184,8 @@ public class gameArena {
         state = gameState.WAITING;
 
         if (getAliveSize() == 1) {
-            Bukkit.broadcastMessage(chatUtils.color("&e" + alive.toString() + "&a Has just won a game!"));
+            String name = alive.toString().replace("[CraftPlayer{name=", "").replace("}]", "");
+            Bukkit.broadcastMessage(chatUtils.color("&e" + name + "&a Has just won a game!"));
         }
 
         lobby.clear();
@@ -193,7 +207,7 @@ public class gameArena {
         for (Player players : Bukkit.getOnlinePlayers()) {
             if (isAlive(players)) {
                 players.teleport(aliveSpawn);
-                players.sendMessage(chatUtils.color("&aFight to the death!"));
+                //players.sendMessage(chatUtils.color("&aFight to the death!"));
             }
         }
     }
