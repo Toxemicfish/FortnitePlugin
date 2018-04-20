@@ -23,11 +23,11 @@ public class arenaYML {
 
     public static void reloadArenasFile() {
         if (arenaFile == null) {
-            arenaFile = new File(plugin.getDataFolder(), "arenas.yml");
+            arenaFile = new File(Bukkit.getPluginManager().getPlugin("Fortnite").getDataFolder(), "arenas.yml");
         }
         arena = YamlConfiguration.loadConfiguration(arenaFile);
 
-        InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Survival").getResource("blockLevels.yml");
+        InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Fortnite").getResource("arenas.yml");
         if (defConfigStream != null) {
             YamlConfiguration defconfig = YamlConfiguration.loadConfiguration(defConfigStream);
             if (!arenaFile.exists() || arenaFile.length() == 0L) {
