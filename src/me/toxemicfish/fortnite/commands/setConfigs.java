@@ -37,10 +37,13 @@ public class setConfigs implements CommandExecutor {
 
     public static void setupGameFile() {
         if (!gameYML.getgame().contains("Settings.minPlayers"))
-            gameYML.getgame().set("Settings.minPlayers", 3);
+            gameYML.getgame().set("Settings.minPlayers", 2);
 
         if (!gameYML.getgame().contains("Settings.countdown"))
             gameYML.getgame().set("Settings.countdown", 10);
+
+        if (!gameYML.getgame().contains("Settings.world"))
+            gameYML.getgame().set("Settings.world", "world");
 
         if (!gameYML.getgame().contains("Settings.aliveSpawn.world"))
             gameYML.getgame().set("Settings.aliveSpawn.world", "world");

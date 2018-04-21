@@ -3,9 +3,8 @@ package me.toxemicfish.fortnite.core.Games;
 import me.toxemicfish.fortnite.Main;
 import me.toxemicfish.fortnite.core.States.gameState;
 import me.toxemicfish.fortnite.utils.chatUtils;
+import me.toxemicfish.fortnite.utils.consoleUtils;
 import me.toxemicfish.fortnite.utils.gameYML;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import org.bukkit.*;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Animals;
@@ -14,15 +13,39 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashSet;
+import java.util.*;
 
 public class gameArena {
 
     private Main plugin;
 
+    private World world;
+
+    private Map<Player, Location> playerToSpawnPoint = new HashMap<>();
+
     public gameArena(Main plugin) {
         this.plugin = plugin;
         state = gameState.WAITING;
+
+        this.spawnPoints = new ArrayList<>();
+
+        this.world = Bukkit.getWorld(gameYML.getgame().getString("Settings.world"));
+
+        for(String point : gameYML.getgame().getStringList("Settings.spawnPoints")) {
+            // X:0,Y:0,Z:0
+            try {
+                String[] values = point.split(","); // [X:0, Y:0, Z:0, YAW:0, PITCH:0]
+                double x = Double.parseDouble(values[0].split(":")[1]);
+                double y = Double.parseDouble(values[1].split(":")[1]);
+                double z = Double.parseDouble(values[2].split(":")[1]);
+                float yaw = Float.parseFloat(values[3].split(":")[1]);
+                float pitch = Float.parseFloat(values[4].split(":")[1]);
+                Location location = new Location(world, x, y, z, yaw, pitch);
+                spawnPoints.add(location);
+            } catch (Exception ex) {
+                consoleUtils.consoleBad("Failed to load spawnPoint with the metadata " + point + ". ExceptionType: " + ex);
+            }
+        }
     }
 
     private gameState state;
@@ -40,6 +63,8 @@ public class gameArena {
 
 
     private int MINIMUM_PLAYERS = gameYML.getgame().getInt("Settings.minPlayers");
+
+    private List<Location> spawnPoints;
 
     private HashSet<Player> lobby = new HashSet<>();
 
@@ -130,6 +155,20 @@ public class gameArena {
         for (Player lobby : Bukkit.getOnlinePlayers()) {
             if (isLobby(lobby)) {
                 lobby.sendMessage(chatUtils.color(prefix + msg));
+            }
+        }
+    }
+
+    public void assignSpawnPositions() {
+        int id = 0;
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            if(isLobby(player)) {
+                try {
+
+                } catch (IndexOutOfBoundsException ex) {
+                    ex.printStackTrace();
+                    //consoleUtils.consoleBad("Failed to load spawnPoint with the metadata " + point + ". ExceptionType: " + ex");
+                }
             }
         }
     }
